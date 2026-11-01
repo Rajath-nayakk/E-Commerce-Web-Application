@@ -42,19 +42,21 @@ declare(strict_types=1);
     }
 })();
 
-function env(string $key, mixed $default = null): mixed {
-    $val = $_ENV[$key] ?? getenv($key);
-    if ($val === false || $val === null) {
-        return $default;
-    }
+if (!function_exists('env')) {
+    function env(string $key, mixed $default = null): mixed {
+        $val = $_ENV[$key] ?? getenv($key);
+        if ($val === false || $val === null) {
+            return $default;
+        }
 
-    return match (strtolower((string) $val)) {
-        'true', '(true)' => true,
-        'false', '(false)' => false,
-        'empty', '(empty)' => '',
-        'null', '(null)' => null,
-        default => $val,
-    };
+        return match (strtolower((string) $val)) {
+            'true', '(true)' => true,
+            'false', '(false)' => false,
+            'empty', '(empty)' => '',
+            'null', '(null)' => null,
+            default => $val,
+        };
+    }
 }
 
 return [
