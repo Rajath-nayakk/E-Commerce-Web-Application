@@ -1,0 +1,16 @@
+# Environment
+.env
+
+# Database local storage (if SQLite fallback used)
+database/*.sqlite
+database/*.sqlite-journal
+
+# Vendor & logs
+/vendor/
+*.log
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
