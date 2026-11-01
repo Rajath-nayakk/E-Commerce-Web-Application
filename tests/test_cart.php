@@ -14,6 +14,12 @@ Session::start();
 Session::destroy();
 Session::start();
 
+// Ensure clean slate in DB for test user
+$user = User::findByEmail('user@store.com');
+if ($user) {
+    \App\Core\Database::getInstance()->delete('cart_items', 'user_id = :uid', ['uid' => $user['id']]);
+}
+
 // 1. Guest Cart
 $add1 = Cart::addItem(1, 2);
 if (!$add1['success']) {
