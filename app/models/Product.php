@@ -184,3 +184,4 @@ class Product extends Model
         return static::db()->fetchAll($sql, ['threshold' => $threshold]);
     }
 }
+

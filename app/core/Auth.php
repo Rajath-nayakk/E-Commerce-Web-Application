@@ -238,3 +238,4 @@ class Auth
         return max(0, $remaining);
     }
 }
+

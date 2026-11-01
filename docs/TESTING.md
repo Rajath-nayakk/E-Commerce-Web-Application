@@ -155,3 +155,4 @@ php tests/test_api.php
 ```
 
 All 6 test suites execute with zero failures.
+

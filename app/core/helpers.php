@@ -73,3 +73,4 @@ if (!function_exists('old')) {
         return Session::get('_old_input')[$key] ?? $default;
     }
 }
+

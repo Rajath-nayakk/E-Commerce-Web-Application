@@ -14,3 +14,4 @@ database/*.sqlite-journal
 Thumbs.db
 .vscode/
 .idea/
+

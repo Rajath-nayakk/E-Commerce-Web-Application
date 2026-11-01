@@ -61,3 +61,4 @@ class PasswordReset extends Model
         static::db()->delete(static::$table, 'token_hash = :hash', ['hash' => $tokenHash]);
     }
 }
+

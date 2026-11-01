@@ -162,3 +162,4 @@ class Validator
         return $firstField !== null ? $this->errors[$firstField][0] : null;
     }
 }
+

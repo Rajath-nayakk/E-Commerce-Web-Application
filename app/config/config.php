@@ -63,6 +63,7 @@ return [
     'app_name'      => env('APP_NAME', 'NovaTech Gear'),
     'app_env'       => env('APP_ENV', 'development'),
     'app_debug'     => env('APP_DEBUG', true),
+    'app_demo'      => (bool) env('APP_DEMO', false),
     'app_url'       => rtrim(env('APP_URL', 'http://localhost:8000'), '/'),
     'app_secret'    => env('APP_SECRET', 'super-secret-key-32-chars-minimum'),
     'currency'      => '$',

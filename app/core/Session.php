@@ -120,3 +120,4 @@ class Session
         return !empty($_SESSION['_flash']);
     }
 }
+

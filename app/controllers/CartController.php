@@ -130,3 +130,4 @@ class CartController extends Controller
         $this->redirect('/cart');
     }
 }
+

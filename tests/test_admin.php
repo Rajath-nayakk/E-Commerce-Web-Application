@@ -56,3 +56,4 @@ if (empty($users)) {
 }
 
 echo "SUCCESS: Phase 6 Admin metrics, product/category management, and user statistics verified!\n";
+

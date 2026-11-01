@@ -36,3 +36,4 @@ if ($totals['total_quantity'] !== 1) {
 Cart::clear();
 
 echo "SUCCESS: Phase 7 JSON APIs verified!\n";
+

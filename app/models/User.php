@@ -52,3 +52,4 @@ class User extends Model
         return static::db()->fetchAll($sql);
     }
 }
+

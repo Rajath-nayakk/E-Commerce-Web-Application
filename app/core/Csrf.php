@@ -74,3 +74,4 @@ class Csrf
         return false;
     }
 }
+

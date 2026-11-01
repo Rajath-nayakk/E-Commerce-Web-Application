@@ -268,14 +268,14 @@ php database/migrate.php --driver=sqlite
 
 ---
 
-## 👥 Demo Accounts
+## 👥 Demo accounts (evaluation only)
 
 | Role | Email | Password | Access Capabilities |
 | :--- | :--- | :--- | :--- |
 | **Administrator** | `admin@store.com` | `Admin@123` | Full Admin Console (`/admin`), Sales Metrics, Product & Category CRUD, Advance Order Statuses (`Pending` ➔ `Processing` ➔ `Shipped` ➔ `Delivered` / `Cancelled`), User Audit. |
 | **Customer** | `user@store.com` | `User@123` | Storefront catalog browsing, cart operations, checkout, and personal order tracking ("My Orders"). |
 
-*(Note: The login page includes a convenient **1-Click Quick Fill** button for instant demo evaluation).*
+> **Note on Demo Mode**: The login page's convenient "1-Click Quick Fill" buttons render **only** when `APP_DEMO=true` is set in `.env`. In `.env.example`, `APP_DEMO=false` is the default to ensure production environments do not expose helper buttons. Set `APP_DEMO=true` during college evaluation and viva demonstrations.
 
 ---
 
@@ -391,3 +391,4 @@ All endpoints return standardized JSON payloads with appropriate HTTP status cod
 
 ### Q4: How is the order tracking timeline implemented?
 > **Answer**: Every status change (initial placement, admin processing, dispatch, delivery, or cancellation) creates an immutable record in `order_status_history` with the foreign key `order_id`, new status, administrator note, and timestamp. The customer tracking view queries these records to render a dynamic multi-stage visual journey bar.
+

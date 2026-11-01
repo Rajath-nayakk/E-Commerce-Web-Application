@@ -28,3 +28,4 @@ class OrderStatusHistory extends Model
         return static::db()->fetchAll($sql, ['oid' => $orderId]);
     }
 }
+

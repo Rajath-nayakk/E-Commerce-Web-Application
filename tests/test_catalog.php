@@ -36,3 +36,4 @@ if (!$p || $p['name'] !== 'UltraSlim 4K OLED Monitor 27"') {
 }
 
 echo "SUCCESS: Phase 3 catalog, search, category filter, and product detail verified!\n";
+

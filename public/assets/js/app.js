@@ -165,3 +165,4 @@ function initToast() {
         }, 6000);
     });
 }
+

@@ -23,8 +23,10 @@ class AuthController extends Controller
      */
     public function showLogin(Request $request): void
     {
+        $config = require dirname(__DIR__) . '/config/config.php';
         $this->view('auth/login', [
-            'title' => 'Sign In',
+            'title'  => 'Sign In',
+            'isDemo' => !empty($config['app_demo'])
         ]);
     }
 
@@ -243,3 +245,4 @@ class AuthController extends Controller
         $this->redirect('/login');
     }
 }
+

@@ -67,3 +67,4 @@ if (count($userItems3) !== 0) {
 
 Auth::logout();
 echo "SUCCESS: Phase 4 cart (guest, user, and merge on login) verified!\n";
+

@@ -51,3 +51,4 @@ class Response
         self::json($payload, $status);
     }
 }
+

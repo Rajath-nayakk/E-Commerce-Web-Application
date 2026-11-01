@@ -118,3 +118,4 @@ class Request
         return $this->server[$key] ?? $default;
     }
 }
+

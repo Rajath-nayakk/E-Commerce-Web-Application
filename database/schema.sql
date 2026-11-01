@@ -153,3 +153,4 @@ CREATE TABLE `password_resets` (
     INDEX `idx_resets_token` (`token_hash`),
     INDEX `idx_resets_user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+

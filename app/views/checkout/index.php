@@ -181,3 +181,4 @@ function togglePaymentBox(type) {
     }
 }
 </script>
+

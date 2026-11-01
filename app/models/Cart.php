@@ -315,3 +315,4 @@ class Cart extends Model
         return ['success' => true, 'message' => "{$product['name']} added to cart!"];
     }
 }
+

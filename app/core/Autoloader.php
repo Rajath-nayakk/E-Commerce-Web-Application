@@ -20,3 +20,4 @@ spl_autoload_register(function (string $class) {
         require_once $file;
     }
 });
+

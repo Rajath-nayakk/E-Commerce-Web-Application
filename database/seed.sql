@@ -70,3 +70,4 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `description`, `pri
 (23, 6, 'AeroPure Smart HEPA Air Purifier', 'aeropure-smart-hepa-air-purifier', 'High-efficiency 3-stage filtration capturing 99.97% of airborne allergens, real-time PM2.5 air quality sensor, and ultra-quiet 22dB sleep mode.', 189.99, 11, 'product-23.svg', 1, NOW()),
 (24, 6, 'ThermoSmart Pro Wi-Fi Thermostat', 'thermosmart-pro-wifi-thermostat', 'Learns your schedule, automatically optimizes energy consumption, and provides detailed monthly HVAC efficiency analytics.', 129.95, 25, 'product-24.svg', 1, NOW())
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+

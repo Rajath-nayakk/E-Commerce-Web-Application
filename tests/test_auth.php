@@ -32,3 +32,4 @@ if (PasswordReset::findValidToken($rawToken) !== null) {
 }
 
 echo "SUCCESS: Auth, hashing, role, and password reset verified!\n";
+

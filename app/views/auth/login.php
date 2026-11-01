@@ -11,21 +11,23 @@
                 </div>
                 <div class="card-body p-4 p-md-5 bg-white">
 
-                    <!-- Demo 1-Click Fill Buttons for Viva / Grading -->
-                    <div class="p-3 bg-light rounded-3 mb-4 border">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="small fw-bold text-muted text-uppercase">1-Click Demo Login:</span>
-                            <span class="badge bg-secondary">College Viva Helper</span>
+                    <?php if (!empty($isDemo)): ?>
+                        <!-- Demo 1-Click Fill Buttons (Enabled only when APP_DEMO=true) -->
+                        <div class="p-3 bg-light rounded-3 mb-4 border">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small fw-bold text-muted text-uppercase">1-Click Demo Login:</span>
+                                <span class="badge bg-secondary">Demo Mode Active</span>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-sm btn-outline-warning w-50 fw-semibold" onclick="fillLogin('admin@store.com', 'Admin@123')">
+                                    <i class="bi bi-person-gear me-1"></i> Admin
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-primary w-50 fw-semibold" onclick="fillLogin('user@store.com', 'User@123')">
+                                    <i class="bi bi-person me-1"></i> Customer
+                                </button>
+                            </div>
                         </div>
-                        <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-sm btn-outline-warning w-50 fw-semibold" onclick="fillLogin('admin@store.com', 'Admin@123')">
-                                <i class="bi bi-person-gear me-1"></i> Admin
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-primary w-50 fw-semibold" onclick="fillLogin('user@store.com', 'User@123')">
-                                <i class="bi bi-person me-1"></i> Customer
-                            </button>
-                        </div>
-                    </div>
+                    <?php endif; ?>
 
                     <form action="/login" method="POST" autocomplete="on">
                         <?= csrf_field() ?>
@@ -71,9 +73,12 @@
     </div>
 </div>
 
+<?php if (!empty($isDemo)): ?>
 <script>
 function fillLogin(email, pass) {
     document.getElementById('email').value = email;
     document.getElementById('password').value = pass;
 }
 </script>
+<?php endif; ?>
+

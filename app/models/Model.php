@@ -77,3 +77,4 @@ abstract class Model
         return (int) ($row['total'] ?? 0);
     }
 }
+

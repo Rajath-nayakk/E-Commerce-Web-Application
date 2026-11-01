@@ -108,3 +108,4 @@ SVG;
 }
 
 echo "Generated 24 SVG product images in {$outDir}\n";
+
