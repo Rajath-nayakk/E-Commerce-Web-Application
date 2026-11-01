@@ -194,7 +194,17 @@ class Database
      */
     public function insert(string $table, array $data): int
     {
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $table)) {
+            throw new \InvalidArgumentException("Invalid database table identifier: {$table}");
+        }
+
         $columns = array_keys($data);
+        foreach ($columns as $col) {
+            if (!preg_match('/^[a-zA-Z0-9_]+$/', (string) $col)) {
+                throw new \InvalidArgumentException("Invalid database column identifier: {$col}");
+            }
+        }
+
         $fields = implode(', ', array_map(fn($col) => "`{$col}`", $columns));
         $placeholders = implode(', ', array_map(fn($col) => ":{$col}", $columns));
 
@@ -208,10 +218,17 @@ class Database
      */
     public function update(string $table, array $data, string $where, array $whereParams = []): int
     {
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $table)) {
+            throw new \InvalidArgumentException("Invalid database table identifier: {$table}");
+        }
+
         $setParts = [];
         $params = [];
 
         foreach ($data as $col => $val) {
+            if (!preg_match('/^[a-zA-Z0-9_]+$/', (string) $col)) {
+                throw new \InvalidArgumentException("Invalid database column identifier: {$col}");
+            }
             $setParts[] = "`{$col}` = :set_{$col}";
             $params["set_{$col}"] = $val;
         }
@@ -229,6 +246,10 @@ class Database
      */
     public function delete(string $table, string $where, array $params = []): int
     {
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $table)) {
+            throw new \InvalidArgumentException("Invalid database table identifier: {$table}");
+        }
+
         $sql = "DELETE FROM `{$table}` WHERE {$where}";
         $stmt = $this->query($sql, $params);
         return $stmt->rowCount();

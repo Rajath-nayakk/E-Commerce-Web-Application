@@ -82,10 +82,23 @@ class ApiController extends Controller
     }
 
     /**
+     * GET /api/csrf-token
+     * Retrieve CSRF token for API consumers / Single-Page Applications
+     */
+    public function csrfToken(Request $request): void
+    {
+        Response::success('CSRF token retrieved.', [
+            'csrf_token' => \App\Core\Csrf::getToken()
+        ], 200);
+    }
+
+    /**
      * POST /api/cart/add
      */
     public function cartAdd(Request $request): void
     {
+        $this->validateCsrf($request);
+
         $productId = (int) $request->post('product_id', 0);
         $quantity = max(1, (int) $request->post('quantity', 1));
 
@@ -110,6 +123,8 @@ class ApiController extends Controller
      */
     public function cartUpdate(Request $request): void
     {
+        $this->validateCsrf($request);
+
         $productId = (int) $request->post('product_id', 0);
         $quantity = (int) $request->post('quantity', 1);
 
@@ -134,6 +149,8 @@ class ApiController extends Controller
      */
     public function cartRemove(Request $request): void
     {
+        $this->validateCsrf($request);
+
         $productId = (int) $request->post('product_id', 0);
         if ($productId <= 0) {
             Response::error('product_id is required.', 422);
@@ -192,6 +209,8 @@ class ApiController extends Controller
      */
     public function login(Request $request): void
     {
+        $this->validateCsrf($request);
+
         $email = strtolower(trim((string) $request->post('email', '')));
         $password = (string) $request->post('password', '');
 
@@ -228,6 +247,8 @@ class ApiController extends Controller
      */
     public function register(Request $request): void
     {
+        $this->validateCsrf($request);
+
         $name = trim((string) $request->post('name', ''));
         $email = strtolower(trim((string) $request->post('email', '')));
         $password = (string) $request->post('password', '');

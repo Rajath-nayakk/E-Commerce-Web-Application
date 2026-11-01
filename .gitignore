@@ -1,15 +1,31 @@
-# Environment
-.env
+# ==============================================================================
+# NovaTech Gear - Git Ignore Rules
+# ==============================================================================
 
-# Database local storage (if SQLite fallback used)
+# Environment files & Secrets
+.env
+.env.local
+.env.*.local
+
+# Database local storage & SQLite database files
 database/*.sqlite
 database/*.sqlite-journal
+*.sqlite
+*.sqlite3
+*.db
 
-# Vendor & logs
+# Dynamic uploaded files (preserve seed product illustrations)
+/public/uploads/products/product_*.*
+/public/uploads/*
+!/public/uploads/products/
+!/public/uploads/products/product-[0-9]*.svg
+
+# Vendor, logs & temporary runtime files
 /vendor/
 *.log
+/tmp/
 
-# OS & Editor
+# Operating System & IDE
 .DS_Store
 Thumbs.db
 .vscode/

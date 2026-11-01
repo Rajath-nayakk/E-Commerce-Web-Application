@@ -116,7 +116,7 @@ class Validator
                 $column = $params[1] ?? $field;
                 $ignoreId = $params[2] ?? null;
 
-                if ($value !== null && $value !== '' && $table !== '') {
+                if ($value !== null && $value !== '' && $table !== '' && preg_match('/^[a-zA-Z0-9_]+$/', $table) && preg_match('/^[a-zA-Z0-9_]+$/', $column)) {
                     $sql = "SELECT id FROM `{$table}` WHERE `{$column}` = :val";
                     $queryParams = ['val' => $value];
                     if ($ignoreId !== null) {

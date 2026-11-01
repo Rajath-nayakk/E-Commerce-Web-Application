@@ -76,7 +76,7 @@ class AuthController extends Controller
         // 4. Authenticate, regenerate session ID & merge guest cart
         Auth::login($user);
 
-        Session::flash('success', "Welcome back, {$user['name']}!");
+        Session::flash('success', "Welcome back, " . htmlspecialchars($user['name'], ENT_QUOTES, 'UTF-8') . "!");
 
         // Redirect admin to dashboard, normal customer to home or intended url
         if ($user['role'] === 'admin') {
@@ -141,7 +141,7 @@ class AuthController extends Controller
         // Auto login
         Auth::login($user);
 
-        Session::flash('success', "Welcome to NovaTech Gear, {$name}! Your account is active.");
+        Session::flash('success', "Welcome to NovaTech Gear, " . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "! Your account is active.");
         $this->redirect('/');
     }
 

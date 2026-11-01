@@ -107,6 +107,7 @@ $router->group(['middleware' => ['admin']], function (Router $r) {
 // ============================================================================
 // Backend JSON APIs under /api
 // ============================================================================
+$router->get('/api/csrf-token', [ApiController::class, 'csrfToken']);
 $router->get('/api/products', [ApiController::class, 'products']);
 $router->get('/api/products/{id}', [ApiController::class, 'productDetail']);
 

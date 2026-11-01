@@ -110,7 +110,7 @@ class CheckoutController extends Controller
             Session::flash('success', "Order #{$orderId} placed successfully! Thank you for your purchase.");
             $this->redirect("/orders/confirmation/{$orderId}");
         } catch (Exception $e) {
-            Session::flash('danger', "Checkout could not be completed: " . $e->getMessage());
+            Session::flash('danger', "Checkout could not be completed: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
             $this->redirect('/cart');
         }
     }

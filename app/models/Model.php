@@ -32,20 +32,28 @@ abstract class Model
     public static function all(string $orderBy = 'id DESC'): array
     {
         $table = static::$table;
-        $sql = "SELECT * FROM `{$table}` ORDER BY {$orderBy}";
+        $safeOrder = preg_replace('/[^a-zA-Z0-9_,\s`]/', '', $orderBy);
+        $sql = "SELECT * FROM `{$table}` ORDER BY {$safeOrder}";
         return static::db()->fetchAll($sql);
     }
 
     public static function where(string $column, mixed $value, string $orderBy = 'id DESC'): array
     {
         $table = static::$table;
-        $sql = "SELECT * FROM `{$table}` WHERE `{$column}` = :val ORDER BY {$orderBy}";
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $column)) {
+            throw new \InvalidArgumentException("Invalid column name: {$column}");
+        }
+        $safeOrder = preg_replace('/[^a-zA-Z0-9_,\s`]/', '', $orderBy);
+        $sql = "SELECT * FROM `{$table}` WHERE `{$column}` = :val ORDER BY {$safeOrder}";
         return static::db()->fetchAll($sql, ['val' => $value]);
     }
 
     public static function firstWhere(string $column, mixed $value): ?array
     {
         $table = static::$table;
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $column)) {
+            throw new \InvalidArgumentException("Invalid column name: {$column}");
+        }
         $sql = "SELECT * FROM `{$table}` WHERE `{$column}` = :val LIMIT 1";
         return static::db()->fetchOne($sql, ['val' => $value]);
     }

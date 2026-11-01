@@ -24,6 +24,14 @@ use App\Models\User;
 class AdminController extends Controller
 {
     /**
+     * Enforce administrator access control defense-in-depth
+     */
+    public function __construct()
+    {
+        \App\Core\Auth::requireAdmin(new Request());
+    }
+
+    /**
      * Dashboard Overview
      */
     public function dashboard(Request $request): void
@@ -122,7 +130,7 @@ class AdminController extends Controller
             'created_at'  => date('Y-m-d H:i:s')
         ]);
 
-        Session::flash('success', "Product '{$name}' created successfully!");
+        Session::flash('success', "Product '" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' created successfully!");
         $this->redirect('/admin/products');
     }
 
@@ -199,7 +207,7 @@ class AdminController extends Controller
 
         Product::update($productId, $data);
 
-        Session::flash('success', "Product '{$name}' updated successfully!");
+        Session::flash('success', "Product '" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' updated successfully!");
         $this->redirect('/admin/products');
     }
 
@@ -223,10 +231,10 @@ class AdminController extends Controller
         if ($isInOrders) {
             // Cannot hard delete due to historical foreign key integrity, so deactivate
             Product::update($productId, ['is_active' => 0]);
-            Session::flash('info', "Product '{$product['name']}' has previous order history, so it was deactivated rather than deleted.");
+            Session::flash('info', "Product '" . htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') . "' has previous order history, so it was deactivated rather than deleted.");
         } else {
             Product::delete($productId);
-            Session::flash('success', "Product '{$product['name']}' removed permanently.");
+            Session::flash('success', "Product '" . htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') . "' removed permanently.");
         }
 
         $this->redirect('/admin/products');
@@ -260,7 +268,7 @@ class AdminController extends Controller
             'slug' => $slug
         ]);
 
-        Session::flash('success', "Category '{$name}' created successfully!");
+        Session::flash('success', "Category '" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' created successfully!");
         $this->redirect('/admin/categories');
     }
 
@@ -279,7 +287,7 @@ class AdminController extends Controller
             'slug' => $slug
         ]);
 
-        Session::flash('success', "Category updated to '{$name}'.");
+        Session::flash('success', "Category updated to '" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "'.");
         $this->redirect('/admin/categories');
     }
 
