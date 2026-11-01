@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 // 1. Load Autoloader & Core Config
 require_once dirname(__DIR__) . '/app/core/Autoloader.php';
+require_once dirname(__DIR__) . '/app/core/helpers.php';
 require_once dirname(__DIR__) . '/app/config/config.php';
 
 use App\Core\Session;
