@@ -227,15 +227,16 @@ if (php_sapi_name() === 'cli' && isset($argv[0]) && realpath($argv[0]) === realp
     echo "========================================================\n";
 
     $config = require dirname(__DIR__) . '/app/config/database.php';
-    $driver = 'mysql';
+    $driver = strtolower(trim((string) ($config['default'] ?? 'mysql')));
 
     foreach ($argv as $arg) {
         if (str_starts_with($arg, '--driver=')) {
-            $driver = substr($arg, 9);
+            $driver = strtolower(trim(substr($arg, 9)));
         }
     }
 
     if ($driver === 'sqlite') {
+        echo "Mode: Explicit SQLite Database\n";
         $dbPath = $config['connections']['sqlite']['database'];
         if (!is_dir(dirname($dbPath))) {
             mkdir(dirname($dbPath), 0777, true);
@@ -243,21 +244,23 @@ if (php_sapi_name() === 'cli' && isset($argv[0]) && realpath($argv[0]) === realp
         $pdo = new PDO("sqlite:{$dbPath}", null, null, $config['connections']['sqlite']['options']);
         runSqliteMigration($pdo, true);
         echo "\n[SUCCESS] SQLite database migrated & seeded at: {$dbPath}\n";
-    } else {
+    } elseif ($driver === 'mysql') {
+        echo "Mode: Primary MySQL Database\n";
         try {
             runMysqlMigration($config, true);
-            echo "\n[SUCCESS] MySQL database migrated & seeded!\n";
+            echo "\n[SUCCESS] MySQL database migrated & seeded successfully!\n";
         } catch (\Throwable $e) {
-            echo "\n[WARNING] MySQL connection failed: " . $e->getMessage() . "\n";
-            echo "Falling back to SQLite for instant local operation...\n";
-            $dbPath = $config['connections']['sqlite']['database'];
-            if (!is_dir(dirname($dbPath))) {
-                mkdir(dirname($dbPath), 0777, true);
-            }
-            $pdo = new PDO("sqlite:{$dbPath}", null, null, $config['connections']['sqlite']['options']);
-            runSqliteMigration($pdo, true);
-            echo "\n[SUCCESS] SQLite fallback database migrated & seeded!\n";
+            echo "\n[ERROR] MySQL Migration Failed: " . $e->getMessage() . "\n";
+            echo "Troubleshooting:\n";
+            echo " 1. Make sure MySQL server is running on {$config['connections']['mysql']['host']}:{$config['connections']['mysql']['port']}\n";
+            echo " 2. If using XAMPP/WAMP, verify MySQL is started in the control panel\n";
+            echo " 3. Check credentials in .env (DB_HOST, DB_PORT, DB_USER, DB_PASS)\n";
+            echo " 4. To explicitly opt-in to SQLite standalone mode instead, pass: php database/migrate.php --driver=sqlite\n\n";
+            exit(1);
         }
+    } else {
+        echo "\n[ERROR] Unsupported database driver: '{$driver}'. Use 'mysql' or 'sqlite'.\n";
+        exit(1);
     }
 }
 

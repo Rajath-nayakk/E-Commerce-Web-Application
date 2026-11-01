@@ -63,26 +63,65 @@ class Database
     private function connect(): void
     {
         $config = require dirname(__DIR__) . '/config/database.php';
-        $driver = $config['default'] ?? 'mysql';
+        $driver = strtolower(trim((string) ($config['default'] ?? 'mysql')));
 
         if ($driver === 'mysql') {
+            $mc = $config['connections']['mysql'];
             try {
-                $mc = $config['connections']['mysql'];
                 $dsn = "mysql:host={$mc['host']};port={$mc['port']};dbname={$mc['database']};charset={$mc['charset']}";
                 $this->pdo = new PDO($dsn, $mc['username'], $mc['password'], $mc['options']);
                 $this->activeDriver = 'mysql';
                 return;
             } catch (PDOException $e) {
-                // If MySQL fails and fallback_sqlite is enabled, switch to SQLite
-                if (!empty($config['fallback_sqlite'])) {
-                    $this->connectSqlite($config);
-                    return;
-                }
-                throw new Exception("Database Connection Failed: " . $e->getMessage());
+                // NEVER silently switch database drivers!
+                // Report explicit error naming the exact problem.
+                $this->handleConnectionFailure($e, $mc);
             }
-        } else {
+        } elseif ($driver === 'sqlite') {
             $this->connectSqlite($config);
+        } else {
+            throw new Exception("Unsupported database driver: '{$driver}'. Use 'mysql' or 'sqlite'.");
         }
+    }
+
+    private function handleConnectionFailure(PDOException $e, array $mc): void
+    {
+        $message = "Cannot connect to MySQL database '{$mc['database']}' on {$mc['host']}:{$mc['port']}. Error: " . $e->getMessage();
+
+        if (php_sapi_name() === 'cli') {
+            throw new Exception($message, (int) $e->getCode(), $e);
+        }
+
+        // Web Request: Check if JSON or HTML requested
+        $isJson = (!empty($_SERVER['CONTENT_TYPE']) && str_contains(strtolower($_SERVER['CONTENT_TYPE']), 'application/json')) ||
+                  (!empty($_SERVER['HTTP_ACCEPT']) && str_contains(strtolower($_SERVER['HTTP_ACCEPT']), 'application/json')) ||
+                  (!empty($_SERVER['REQUEST_URI']) && str_starts_with($_SERVER['REQUEST_URI'], '/api'));
+
+        http_response_code(500);
+
+        if ($isJson) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode([
+                'success' => false,
+                'error'   => 'Database connection failed',
+                'message' => $message,
+                'hint'    => "Verify MySQL is running on {$mc['host']}:{$mc['port']}, or set DB_DRIVER=sqlite in .env for explicit SQLite mode."
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            exit;
+        }
+
+        $errorMessage = $e->getMessage();
+        $dbName = $mc['database'];
+        $dbHost = $mc['host'];
+        $dbPort = $mc['port'];
+
+        $viewFile = dirname(__DIR__) . '/views/errors/db_error.php';
+        if (file_exists($viewFile)) {
+            require $viewFile;
+        } else {
+            echo "<h1>Database Connection Failed</h1><p>" . htmlspecialchars($message) . "</p>";
+        }
+        exit;
     }
 
     /**

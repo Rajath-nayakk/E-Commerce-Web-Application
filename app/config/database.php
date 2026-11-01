@@ -40,9 +40,6 @@ return [
                 PDO::ATTR_EMULATE_PREPARES   => false,
             ]
         ]
-    ],
-    
-    // Auto-fallback flag: if MySQL cannot connect, switch to SQLite transparently
-    'fallback_sqlite' => (bool) env('DB_FALLBACK_SQLITE', true)
+    ]
 ];
 

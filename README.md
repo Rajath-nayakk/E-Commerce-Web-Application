@@ -150,7 +150,7 @@ erDiagram
 
 ## 🛠️ Technology Stack
 - **Backend**: PHP 8.x (strict types, PSR-4 autoloading, pure PDO)
-- **Database**: MySQL 8.x / MariaDB (with seamless SQLite fallback for instant demo portability)
+- **Database**: MySQL 8.x / MariaDB (Primary driver via `DB_DRIVER=mysql`; strict error reporting if unreachable; explicit opt-in `DB_DRIVER=sqlite` available)
 - **Frontend**: HTML5, CSS3 Custom Properties (Design System), Bootstrap 5.3 utilities, Bootstrap Icons, Vanilla JavaScript (ES6+ fetch API)
 - **Architecture**: Model-View-Controller (MVC) with Front Controller pattern
 
@@ -227,23 +227,21 @@ E-Commerce Web Application/
 
 ## 🚀 Local Setup & Running
 
-### Option A: Using Built-in PHP Server (Fastest — 1 Step)
-```bash
-# 1. Start built-in web server from the project root:
-php -S localhost:8000 -t public
-```
-Open **[http://localhost:8000](http://localhost:8000)** in any web browser.  
-*(Database auto-connects to MySQL if running on port 3306, or seamlessly uses the included SQLite database zero-configuration).*
+NovaTech Gear is built with **MySQL** as its primary production-grade database. An explicit opt-in SQLite driver is also provided for quick standalone demonstrations (`DB_DRIVER=sqlite`).
 
----
-
-### Option B: Using XAMPP / WAMP
-1. Start **Apache** and **MySQL** in the XAMPP / WAMP Control Panel.
-2. Open **phpMyAdmin** (`http://localhost/phpmyadmin`).
-3. Create a database named `ecommerce_db`.
-4. Import `database/schema.sql` and then `database/seed.sql`.
-5. Move the project folder to `C:/xampp/htdocs/ecommerce` (or configure a VirtualHost pointing to `/public`).
-6. Update `.env` if your MySQL password is not blank:
+### Option A: Using XAMPP / WAMP with phpMyAdmin (Recommended for College Lab)
+1. Start the **Apache** and **MySQL** services in your XAMPP or WAMP Control Panel.
+2. Open **phpMyAdmin** in your browser at `http://localhost/phpmyadmin`.
+3. Click **New** on the left navigation panel and create a database named:
+   ```text
+   ecommerce_db
+   ```
+   *(Collation: `utf8mb4_unicode_ci`)*
+4. Select the newly created `ecommerce_db` database, navigate to the **Import** tab at the top:
+   - Click **Browse / Choose File** and select `database/schema.sql`, then click **Import** (or **Go**).
+   - Once schema import completes, repeat the step and import `database/seed.sql` to populate 1 admin, 1 customer, 6 categories, and 24 products.
+5. Clone or copy the project into your web directory (e.g. `C:/xampp/htdocs/ecommerce`).
+6. Copy `.env.example` to `.env` (if not already created) and verify database credentials:
    ```ini
    DB_DRIVER=mysql
    DB_HOST=127.0.0.1
@@ -252,19 +250,45 @@ Open **[http://localhost:8000](http://localhost:8000)** in any web browser.
    DB_USER=root
    DB_PASS=
    ```
-7. Open **`http://localhost/ecommerce/public/`** (or `http://localhost:8000`).
+7. Start your server or browse to:
+   - Built-in server: `php -S localhost:8000 -t public` ➔ `http://localhost:8000`
+   - XAMPP Apache: `http://localhost/ecommerce/public/`
 
 ---
 
-### Option C: Database Migration via CLI
-You can migrate and seed the database anytime via terminal:
+### Option B: Automated CLI Migration (One-Command Database Setup)
+Instead of manual phpMyAdmin imports, you can execute the automated CLI migration tool:
 ```bash
-# Migrate and seed default database:
+# 1. Run migrations & seeding on your primary MySQL database:
 php database/migrate.php
 
-# Force SQLite standalone driver:
-php database/migrate.php --driver=sqlite
+# 2. Start the local PHP development server:
+php -S localhost:8000 -t public
 ```
+> **What `database/migrate.php` does:**
+> - Connects to MySQL on the host and port specified in your `.env`.
+> - Automatically creates `ecommerce_db` if it doesn't already exist.
+> - Applies `database/schema.sql` (creating all 8 relational tables with constraints and foreign keys).
+> - Applies `database/seed.sql` (seeding default administrative & customer accounts, categories, and inventory).
+> - If MySQL is not running or unreachable, `database/migrate.php` halts with an explicit error and troubleshooting checklist (it does **not** silently switch drivers).
+
+---
+
+### Option C: Explicit SQLite Standalone Mode (Zero-Config Fallback)
+If you are evaluating the app on a machine without MySQL/XAMPP installed, you can explicitly opt into standalone SQLite mode:
+1. In `.env`, set:
+   ```ini
+   DB_DRIVER=sqlite
+   DB_SQLITE_PATH=database/store.sqlite
+   ```
+2. Initialize the SQLite schema and seed data via CLI:
+   ```bash
+   php database/migrate.php --driver=sqlite
+   ```
+3. Start the server:
+   ```bash
+   php -S localhost:8000 -t public
+   ```
 
 ---
 

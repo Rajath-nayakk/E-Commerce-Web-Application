@@ -62,10 +62,10 @@ class Order extends Model
                     throw new Exception("Insufficient stock for '{$product['name']}'. Only {$product['stock']} available.");
                 }
 
-                // Deduct stock
+                // Deduct stock safely with distinct parameter names for MySQL compatibility
                 $updated = self::db()->query(
-                    "UPDATE products SET stock = stock - :qty WHERE id = :id AND stock >= :qty",
-                    ['qty' => $quantity, 'id' => $productId]
+                    "UPDATE products SET stock = stock - :qty WHERE id = :id AND stock >= :min_stock",
+                    ['qty' => $quantity, 'id' => $productId, 'min_stock' => $quantity]
                 )->rowCount();
 
                 if ($updated === 0) {
