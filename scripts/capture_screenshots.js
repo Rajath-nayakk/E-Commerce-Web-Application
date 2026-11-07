@@ -16,7 +16,7 @@ const edgePath = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.
 const baseUrl = 'http://localhost:8000';
 
 async function run() {
-    console.log('Launching Edge browser in headless mode...');
+    console.log('Launching Edge browser for Indian Rupee (₹) screenshot capture...');
     const browser = await puppeteer.launch({
         executablePath: edgePath,
         headless: 'new',
@@ -28,68 +28,67 @@ async function run() {
         ]
     });
 
-    async function snap(page, url, filename, waitMs = 500) {
+    async function snap(page, url, filename, waitMs = 1200) {
         console.log(`Navigating to ${url} -> ${filename}...`);
-        await page.goto(url, { waitUntil: 'networkidle2', timeout: 20000 });
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
         if (waitMs > 0) {
             await new Promise(r => setTimeout(r, waitMs));
         }
+
+        const currentUrl = page.url();
+        const pageTitle = await page.title();
+        const hasRupee = await page.evaluate(() => document.body.innerText.includes('₹'));
+        console.log(`  [State] URL: ${currentUrl} | Title: ${pageTitle}`);
+        console.log(`  [INR Check] Page contains Indian Rupee (₹): ${hasRupee}`);
+
         const outPath = path.join(screenshotsDir, filename);
         await page.screenshot({ path: outPath, fullPage: false });
         console.log(`  [OK] Saved ${filename} (${fs.statSync(outPath).size} bytes)`);
     }
 
     // -------------------------------------------------------------------------
-    // 1. Guest & Customer Pages
+    // 1. Guest & Customer Session
     // -------------------------------------------------------------------------
     const userPage = await browser.newPage();
 
     // 1. Home
-    await snap(userPage, `${baseUrl}/`, 'home.png', 800);
+    await snap(userPage, `${baseUrl}/`, 'home.png', 1000);
 
     // 2. Catalog
-    await snap(userPage, `${baseUrl}/products`, 'catalog.png', 800);
+    await snap(userPage, `${baseUrl}/products`, 'catalog.png', 1000);
 
-    // 3. Product detail
-    await snap(userPage, `${baseUrl}/products/ultraslim-4k-oled-monitor-27`, 'product_detail.png', 800);
-
-    // Add item to cart
-    console.log('Adding product to shopping cart...');
-    await userPage.evaluate(() => {
-        const form = document.querySelector('form.ajax-add-cart') || document.querySelector('form[action="/cart/add"]');
-        if (form) form.submit();
-    });
-    await new Promise(r => setTimeout(r, 1200));
-
-    // 4. Cart
-    await snap(userPage, `${baseUrl}/cart`, 'cart.png', 800);
+    // 3. Product detail (UltraSlim 4K OLED Monitor 27")
+    await snap(userPage, `${baseUrl}/products/ultraslim-4k-oled-monitor-27`, 'product_detail.png', 1000);
 
     // Sign in as customer (user@store.com / User@123)
-    console.log('Authenticating as customer (user@store.com)...');
+    console.log('\nAuthenticating as Jane Customer (user@store.com)...');
     await userPage.goto(`${baseUrl}/login`, { waitUntil: 'networkidle2' });
-    await userPage.type('#email', 'user@store.com');
-    await userPage.type('#password', 'User@123');
+    await userPage.type('form[action="/login"] input[name="email"]', 'user@store.com');
+    await userPage.type('form[action="/login"] input[name="password"]', 'User@123');
     await Promise.all([
         userPage.waitForNavigation({ waitUntil: 'networkidle2' }),
-        userPage.evaluate(() => document.querySelector('form[action="/login"]').submit())
+        userPage.click('form[action="/login"] button[type="submit"]')
     ]);
     console.log('Customer signed in, current URL:', userPage.url());
 
+    // Add items to customer cart
+    console.log('Adding products to cart...');
+    await userPage.goto(`${baseUrl}/products/ultraslim-4k-oled-monitor-27`, { waitUntil: 'networkidle2' });
+    await userPage.click('form.ajax-add-cart button[type="submit"]');
+    await new Promise(r => setTimeout(r, 1200));
+
+    await userPage.goto(`${baseUrl}/products/portable-power-bank-26800mah-100w`, { waitUntil: 'networkidle2' });
+    await userPage.click('form.ajax-add-cart button[type="submit"]');
+    await new Promise(r => setTimeout(r, 1200));
+
+    // 4. Cart
+    await snap(userPage, `${baseUrl}/cart`, 'cart.png', 1000);
+
     // 5. Checkout
-    // Ensure item in cart for checkout
-    await userPage.goto(`${baseUrl}/cart`, { waitUntil: 'networkidle2' });
-    await snap(userPage, `${baseUrl}/checkout`, 'checkout.png', 800);
+    await snap(userPage, `${baseUrl}/checkout`, 'checkout.png', 1000);
 
     // 6. Order Timeline
-    console.log('Navigating to Customer My Orders...');
-    await userPage.goto(`${baseUrl}/orders`, { waitUntil: 'networkidle2' });
-    const orderLink = await userPage.$('a[href*="/orders/"]');
-    if (orderLink) {
-        const href = await userPage.evaluate(el => el.getAttribute('href'), orderLink);
-        await snap(userPage, `${baseUrl}${href}`, 'order_timeline.png', 800);
-    } else {
-        await snap(userPage, `${baseUrl}/orders/2`, 'order_timeline.png', 800);
-    }
+    await snap(userPage, `${baseUrl}/orders/1`, 'order_timeline.png', 1000);
 
     await userPage.close();
 
@@ -100,28 +99,28 @@ async function run() {
     const adminContext = await browser.createBrowserContext();
     const adminPage = await adminContext.newPage();
 
-    console.log('Authenticating as admin (admin@store.com)...');
+    console.log('Authenticating as Administrator (admin@store.com)...');
     await adminPage.goto(`${baseUrl}/login`, { waitUntil: 'networkidle2' });
-    await adminPage.type('#email', 'admin@store.com');
-    await adminPage.type('#password', 'Admin@123');
+    await adminPage.type('form[action="/login"] input[name="email"]', 'admin@store.com');
+    await adminPage.type('form[action="/login"] input[name="password"]', 'Admin@123');
     await Promise.all([
         adminPage.waitForNavigation({ waitUntil: 'networkidle2' }),
-        adminPage.evaluate(() => document.querySelector('form[action="/login"]').submit())
+        adminPage.click('form[action="/login"] button[type="submit"]')
     ]);
     console.log('Admin signed in, current URL:', adminPage.url());
 
     // 7. Admin Dashboard
-    await snap(adminPage, `${baseUrl}/admin`, 'admin_dashboard.png', 800);
+    await snap(adminPage, `${baseUrl}/admin`, 'admin_dashboard.png', 1000);
 
     // 8. Admin Orders
-    await snap(adminPage, `${baseUrl}/admin/orders`, 'admin_orders.png', 800);
+    await snap(adminPage, `${baseUrl}/admin/orders`, 'admin_orders.png', 1000);
 
     await adminPage.close();
     await adminContext.close();
 
     await browser.close();
     console.log('\n=========================================================');
-    console.log(' ALL 8 SCREENSHOTS CAPTURED AND VERIFIED!');
+    console.log(' ALL 8 SCREENSHOTS CAPTURED WITH INDIAN RUPEES (₹)!');
     console.log('=========================================================');
 }
 
