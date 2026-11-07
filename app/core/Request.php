@@ -51,6 +51,9 @@ class Request
     public function method(): string
     {
         $method = strtoupper($this->server['REQUEST_METHOD'] ?? 'GET');
+        if ($method === 'HEAD') {
+            return 'GET';
+        }
         // Support method spoofing for PUT/DELETE
         if ($method === 'POST') {
             if (isset($this->post['_method'])) {
