@@ -14,11 +14,15 @@ database/*.sqlite-journal
 *.sqlite3
 *.db
 
-# Dynamic uploaded files (preserve seed product illustrations)
-/public/uploads/products/product_*.*
+# Dynamic uploaded files (preserve seed product illustrations and photos)
 /public/uploads/*
 !/public/uploads/products/
 !/public/uploads/products/product-[0-9]*.svg
+!/public/uploads/products/*.jpg
+
+# Node modules & frontend dependencies
+node_modules/
+package-lock.json
 
 # Vendor, logs & temporary runtime files
 /vendor/

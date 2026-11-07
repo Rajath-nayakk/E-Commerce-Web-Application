@@ -4,7 +4,7 @@
     <div class="col-sm-6 col-xl-3">
         <div class="admin-stat-card d-flex align-items-center gap-3">
             <div class="stat-icon bg-success-subtle text-success">
-                <i class="bi bi-currency-dollar"></i>
+                <i class="bi bi-currency-rupee"></i>
             </div>
             <div>
                 <span class="text-muted small fw-semibold d-block">Total Revenue</span>

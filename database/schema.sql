@@ -54,6 +54,12 @@ CREATE TABLE `products` (
     `slug` VARCHAR(150) NOT NULL UNIQUE,
     `description` TEXT NULL,
     `price` DECIMAL(10, 2) NOT NULL,
+    `original_price` DECIMAL(10, 2) NULL,
+    `brand` VARCHAR(100) NULL,
+    `rating` DECIMAL(2, 1) NOT NULL DEFAULT 4.5,
+    `review_count` INT UNSIGNED NOT NULL DEFAULT 0,
+    `is_featured` TINYINT(1) NOT NULL DEFAULT 0,
+    `is_deal` TINYINT(1) NOT NULL DEFAULT 0,
     `stock` INT NOT NULL DEFAULT 0,
     `image` VARCHAR(255) NULL,
     `is_active` TINYINT(1) NOT NULL DEFAULT 1,
@@ -63,7 +69,9 @@ CREATE TABLE `products` (
         ON DELETE RESTRICT ON UPDATE CASCADE,
     INDEX `idx_products_category` (`category_id`),
     INDEX `idx_products_is_active` (`is_active`),
-    INDEX `idx_products_slug` (`slug`)
+    INDEX `idx_products_slug` (`slug`),
+    INDEX `idx_products_featured` (`is_featured`),
+    INDEX `idx_products_deal` (`is_deal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------------------------------------------------------

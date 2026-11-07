@@ -56,7 +56,7 @@ class Cart extends Model
             $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
         }
 
-        $shipping = $subtotal > 0 && $subtotal < 100 ? 10.00 : 0.00; // Free shipping over $100
+        $shipping = ($subtotal > 0 && $subtotal < 999.0) ? 99.00 : 0.00; // Free express delivery across India on orders over ₹999
         $total = $subtotal + $shipping;
 
         return [

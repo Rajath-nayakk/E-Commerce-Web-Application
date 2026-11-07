@@ -12,6 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
+ * Format number into Indian Rupees (₹)
+ */
+window.formatINR = function(amount) {
+    return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 2
+    }).format(amount);
+};
+
+/**
  * Toast Notification Dispatcher
  */
 function showToast(message, type = 'success') {

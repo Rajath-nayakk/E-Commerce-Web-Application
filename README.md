@@ -1,7 +1,7 @@
-# 🚀 NovaTech Gear — Full-Stack E-Commerce Web Application
+# 🚀 NovaTech Gear — Premium Indian Electronics E-Commerce Platform
 
-> **College Capstone & Final Project** engineered using **pure modern PHP 8.x (no framework, pure PDO)** and **MySQL / MariaDB**.  
-> Features clean Model-View-Controller (MVC) architecture, atomic ACID database transactions, role-based authorization (RBAC), CSRF & XSS defenses, rate-limiting, RESTful JSON APIs, and a modern mobile-responsive design system. Runnable locally on XAMPP, WAMP, or `php -S localhost:8000 -t public`.
+> **Production-Grade Full-Stack E-Commerce Application** engineered using **pure modern PHP 8.x (no framework, pure PDO)** and **MySQL / MariaDB**.  
+> Transformed into a modern electronics retail experience with **Indian Rupees (₹)** currency formatting, Pan-India PIN code delivery estimator, GST compliance, realistic electronics pricing, clean Model-View-Controller (MVC) architecture, atomic ACID database transactions, role-based authorization (RBAC), CSRF & XSS defenses, rate-limiting, RESTful JSON APIs, and a mobile-first responsive design system. Runnable locally on XAMPP, WAMP, or `php -S localhost:8000 -t public`.
 
 ---
 

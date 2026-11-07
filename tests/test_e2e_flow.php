@@ -96,7 +96,7 @@ $addCart = httpReq("{$baseUrl}/cart/add", 'POST', [
 ], $cookieFileUser);
 
 $cartPage = httpReq("{$baseUrl}/cart", 'GET', [], $cookieFileUser);
-if (!str_contains($cartPage['body'], 'Portable Power Bank 26800mAh') || !str_contains($cartPage['body'], '$159.98')) {
+if (!str_contains($cartPage['body'], 'Portable Power Bank 26800mAh') || (!str_contains($cartPage['body'], '9,998') && !str_contains($cartPage['body'], '9998'))) {
     echo "FAILED: Cart page did not reflect added product\n";
     exit(1);
 }
@@ -110,8 +110,8 @@ $csrf = extractCsrf($checkoutPage['body']);
 $checkoutPost = httpReq("{$baseUrl}/checkout/process", 'POST', [
     'csrf_token'       => $csrf,
     'shipping_name'    => 'Jane Customer',
-    'shipping_phone'   => '+1 (555) 987-6543',
-    'shipping_address' => '456 Silicon Avenue, Cupertino, CA 95014',
+    'shipping_phone'   => '+91 98765 43210',
+    'shipping_address' => 'Flat 402, HighTech Residency, 100 Feet Road, Indiranagar, Bengaluru, Karnataka 560038',
     'payment_method'   => 'cod'
 ], $cookieFileUser);
 

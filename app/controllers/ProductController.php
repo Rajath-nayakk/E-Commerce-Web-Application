@@ -25,14 +25,20 @@ class ProductController extends Controller
         $category = trim((string) $request->get('category', ''));
         $sort = trim((string) $request->get('sort', 'newest'));
         $inStock = (int) $request->get('in_stock', 0);
+        $minPrice = $request->get('min_price');
+        $maxPrice = $request->get('max_price');
+        $brand = trim((string) $request->get('brand', ''));
         $page = max(1, (int) $request->get('page', 1));
         $perPage = 9;
 
         $filters = [
-            'q'        => $q,
-            'category' => $category,
-            'sort'     => $sort,
-            'in_stock' => $inStock
+            'q'         => $q,
+            'category'  => $category,
+            'sort'      => $sort,
+            'in_stock'  => $inStock,
+            'min_price' => $minPrice,
+            'max_price' => $maxPrice,
+            'brand'     => $brand
         ];
 
         $catalog = Product::getCatalog($filters, $page, $perPage);

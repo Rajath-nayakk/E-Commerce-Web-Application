@@ -1,0 +1,12 @@
+{
+  "name": "novatech-gear",
+  "version": "2.0.0",
+  "description": "NovaTech Gear - Premium Indian Electronics E-Commerce Platform",
+  "type": "module",
+  "scripts": {
+    "screenshots": "node scripts/capture_screenshots.js"
+  },
+  "dependencies": {
+    "puppeteer-core": "^25.16.0"
+  }
+}

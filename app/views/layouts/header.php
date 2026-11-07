@@ -13,7 +13,7 @@ $currentUser = Auth::user();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<?= csrf_token() ?>">
-    <title><?= isset($title) ? e($title) . ' | NovaTech Gear' : 'NovaTech Gear | Modern Tech & Hardware Store' ?></title>
+    <title><?= isset($title) ? e($title) . ' | NovaTech Gear' : 'NovaTech Gear | Premium Indian Electronics & Hardware Store' ?></title>
     
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,7 @@ $currentUser = Auth::user();
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Bootstrap 5.3 & Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.php.css" rel="stylesheet" onerror="this.onerror=null;this.href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css';">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <!-- Custom Design System Stylesheet -->
@@ -30,14 +30,15 @@ $currentUser = Auth::user();
 <body class="d-flex flex-column min-vh-100">
 
 <!-- Top Announcement Ribbon -->
-<div class="top-ribbon py-1 text-center text-white small fw-semibold">
+<div class="top-ribbon py-1 fw-semibold">
     <div class="container d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-shield-check me-1"></i> Official Warranty & 30-Day Money Back Guarantee</span>
-        <span class="d-none d-md-inline"><i class="bi bi-truck me-1"></i> Free Shipping on orders over $100</span>
-        <div class="d-flex gap-3">
+        <span><i class="bi bi-shield-check text-warning me-1"></i> 100% Genuine Electronics | Official Brand Warranty</span>
+        <span class="d-none d-md-inline"><i class="bi bi-truck text-info me-1"></i> Free Express Delivery Across India on orders over ₹999</span>
+        <div class="d-flex align-items-center gap-3">
+            <span class="d-none d-lg-inline text-muted">Toll-Free: 1800-889-NOVA</span>
             <?php if (Auth::isAdmin()): ?>
                 <a href="/admin" class="text-warning fw-bold text-decoration-none">
-                    <i class="bi bi-speedometer2 me-1"></i>Admin Panel
+                    <i class="bi bi-speedometer2 me-1"></i>Admin Console
                 </a>
             <?php endif; ?>
         </div>
@@ -60,14 +61,14 @@ $currentUser = Auth::user();
 
         <!-- Mobile Toggler & Mobile Cart -->
         <div class="d-flex align-items-center gap-2 d-lg-none">
-            <a href="/cart" class="btn btn-outline-light position-relative btn-cart-mobile">
+            <a href="/cart" class="btn btn-outline-dark position-relative btn-cart-mobile">
                 <i class="bi bi-bag"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count-badge">
                     <?= $cartCount ?>
                 </span>
             </a>
-            <button class="navbar-toggler text-white border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="bi bi-list fs-2 text-white"></i>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list fs-2 text-dark"></i>
             </button>
         </div>
 
@@ -76,31 +77,37 @@ $currentUser = Auth::user();
             <!-- Navigation Links -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/"><i class="bi bi-house me-1"></i>Home</a>
+                    <a class="nav-link <?= ($_SERVER['REQUEST_URI'] === '/' || $_SERVER['REQUEST_URI'] === '') ? 'active' : '' ?>" href="/">
+                        <i class="bi bi-house me-1"></i>Home
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/products"><i class="bi bi-grid me-1"></i>Catalog</a>
+                    <a class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'], '/products') ? 'active' : '' ?>" href="/products">
+                        <i class="bi bi-grid me-1"></i>Catalog
+                    </a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-tag me-1"></i>Categories
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-dark shadow">
+                    <ul class="dropdown-menu shadow-lg border-0 rounded-3">
                         <?php foreach ($categories as $cat): ?>
                             <li>
-                                <a class="dropdown-item d-flex justify-content-between align-items-center" href="/products?category=<?= e($cat['slug']) ?>">
+                                <a class="dropdown-item d-flex justify-content-between align-items-center py-2" href="/products?category=<?= e($cat['slug']) ?>">
                                     <span><?= e($cat['name']) ?></span>
-                                    <span class="badge bg-secondary rounded-pill small"><?= $cat['product_count'] ?></span>
+                                    <span class="badge bg-light text-muted border rounded-pill small"><?= $cat['product_count'] ?></span>
                                 </a>
                             </li>
                         <?php endforeach; ?>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item fw-semibold text-primary" href="/products">View All Products &rarr;</a></li>
+                        <li><a class="dropdown-item fw-bold text-primary" href="/products">View All Products &rarr;</a></li>
                     </ul>
                 </li>
                 <?php if (Auth::check()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="/orders"><i class="bi bi-box-seam me-1"></i>My Orders</a>
+                        <a class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'], '/orders') ? 'active' : '' ?>" href="/orders">
+                            <i class="bi bi-box-seam me-1"></i>My Orders
+                        </a>
                     </li>
                 <?php endif; ?>
             </ul>
@@ -108,8 +115,8 @@ $currentUser = Auth::user();
             <!-- Search Form -->
             <form class="d-flex mx-lg-3 my-2 my-lg-0 search-form" action="/products" method="GET">
                 <div class="input-group">
-                    <input class="form-control" type="search" name="q" placeholder="Search monitors, audio, watches..." value="<?= e($_GET['q'] ?? '') ?>" aria-label="Search">
-                    <button class="btn btn-primary" type="submit">
+                    <input class="form-control" type="search" name="q" placeholder="Search 4K monitors, ANC audio, keyboards..." value="<?= e($_GET['q'] ?? '') ?>" aria-label="Search">
+                    <button class="btn btn-primary" type="submit" aria-label="Submit search">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
@@ -118,8 +125,8 @@ $currentUser = Auth::user();
             <!-- User Auth & Cart Area -->
             <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
                 <!-- Cart Button -->
-                <a href="/cart" class="btn btn-outline-light position-relative d-none d-lg-inline-flex align-items-center gap-2 px-3 py-2 btn-cart-desktop">
-                    <i class="bi bi-bag-fill fs-5"></i>
+                <a href="/cart" class="btn btn-cart-desktop d-none d-lg-inline-flex align-items-center gap-2">
+                    <i class="bi bi-bag-fill fs-5 text-primary"></i>
                     <span>Cart</span>
                     <span class="badge rounded-pill bg-danger cart-count-badge">
                         <?= $cartCount ?>
@@ -135,13 +142,13 @@ $currentUser = Auth::user();
                             </div>
                             <span class="d-none d-xl-inline fw-semibold"><?= e($currentUser['name'] ?? 'User') ?></span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow">
-                            <li class="dropdown-header text-uppercase small text-muted">Signed in as</li>
-                            <li><span class="dropdown-item-text fw-bold text-white"><?= e($currentUser['email'] ?? '') ?></span></li>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3">
+                            <li class="dropdown-header text-uppercase small text-muted">Account Details</li>
+                            <li><span class="dropdown-item-text fw-bold text-dark"><?= e($currentUser['email'] ?? '') ?></span></li>
                             <li><hr class="dropdown-divider"></li>
                             <?php if (Auth::isAdmin()): ?>
                                 <li>
-                                    <a class="dropdown-item text-warning" href="/admin">
+                                    <a class="dropdown-item text-primary fw-semibold" href="/admin">
                                         <i class="bi bi-speedometer2 me-2"></i>Admin Dashboard
                                     </a>
                                 </li>
@@ -149,7 +156,7 @@ $currentUser = Auth::user();
                             <?php endif; ?>
                             <li>
                                 <a class="dropdown-item" href="/orders">
-                                    <i class="bi bi-box-seam me-2"></i>Order History
+                                    <i class="bi bi-box-seam me-2"></i>Order History & Tracking
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
@@ -165,17 +172,37 @@ $currentUser = Auth::user();
                     </div>
                 <?php else: ?>
                     <!-- Guest Sign In / Register Buttons -->
-                    <a href="/login" class="btn btn-outline-light btn-sm px-3 py-2">Sign In</a>
-                    <a href="/register" class="btn btn-primary btn-sm px-3 py-2">Register</a>
+                    <a href="/login" class="btn btn-outline-dark btn-sm px-3 py-2 rounded-pill fw-semibold">Sign In</a>
+                    <a href="/register" class="btn btn-primary btn-sm px-3 py-2 rounded-pill fw-semibold shadow-sm">Register</a>
                 <?php endif; ?>
             </div>
         </div>
     </div>
 </header>
 
+<!-- Secondary Category Bar for Quick Navigation -->
+<nav class="category-nav-bar py-1 d-none d-md-block shadow-xs">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div class="d-flex gap-2">
+            <a href="/products" class="category-nav-link <?= empty($_GET['category']) && str_starts_with($_SERVER['REQUEST_URI'], '/products') ? 'active' : '' ?>">
+                <i class="bi bi-stars text-warning"></i> All Electronics
+            </a>
+            <?php foreach ($categories as $cat): ?>
+                <a href="/products?category=<?= e($cat['slug']) ?>" class="category-nav-link <?= (($_GET['category'] ?? '') === $cat['slug']) ? 'active' : '' ?>">
+                    <?= e($cat['name']) ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+        <div>
+            <a href="/products?deal=1" class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 text-decoration-none rounded-pill fw-bold">
+                <i class="bi bi-fire me-1"></i> Today's Deals
+            </a>
+        </div>
+    </div>
+</nav>
+
 <!-- Flash Alerts Partial -->
 <?php require __DIR__ . '/alerts.php'; ?>
 
 <!-- Main Content Wrapper -->
 <main class="flex-grow-1">
-

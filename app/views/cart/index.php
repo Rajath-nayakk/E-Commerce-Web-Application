@@ -10,7 +10,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
         <h1 class="h3 fw-bold m-0 d-flex align-items-center gap-2">
-            <i class="bi bi-bag-check text-primary"></i>
+            <i class="bi bi-bag-check-fill text-primary"></i>
             <span>Your Shopping Cart</span>
         </h1>
         <?php if (!empty($items)): ?>
@@ -28,15 +28,40 @@
             </div>
             <h3 class="h4 fw-bold">Your cart is currently empty</h3>
             <p class="text-muted small mb-4">
-                Looks like you haven't added any gear or accessories to your cart yet.
+                Looks like you haven't added any electronics or hardware peripherals to your cart yet.
             </p>
             <div>
-                <a href="/products" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold">
-                    <i class="bi bi-grid me-2"></i>Browse Catalog Now
+                <a href="/products" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold shadow-sm">
+                    <i class="bi bi-grid me-2"></i>Explore Products Now
                 </a>
             </div>
         </div>
     <?php else: ?>
+        <!-- Free Delivery Progress Bar Banner -->
+        <?php 
+        $freeShippingThreshold = 999.0;
+        $diff = $freeShippingThreshold - $totals['subtotal'];
+        $progressPercent = min(100, max(0, (int)(($totals['subtotal'] / $freeShippingThreshold) * 100)));
+        ?>
+        <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
+            <div class="d-flex justify-content-between align-items-center mb-2 small fw-semibold">
+                <?php if ($diff > 0): ?>
+                    <span>
+                        <i class="bi bi-truck text-primary me-1"></i> Add <strong><?= format_price($diff) ?></strong> more for <strong>FREE Express Pan-India Delivery!</strong>
+                    </span>
+                    <span class="text-muted"><?= $progressPercent ?>%</span>
+                <?php else: ?>
+                    <span class="text-success fw-bold">
+                        <i class="bi bi-check-circle-fill text-success me-1"></i> Congratulations! You have unlocked <strong>FREE Express Pan-India Delivery!</strong>
+                    </span>
+                    <span class="badge bg-success-subtle text-success">Unlocked</span>
+                <?php endif; ?>
+            </div>
+            <div class="delivery-progress-bar">
+                <div class="delivery-progress-fill" style="width: <?= $progressPercent ?>%;"></div>
+            </div>
+        </div>
+
         <div class="row g-4">
             <!-- Cart Items List -->
             <div class="col-lg-8">
@@ -60,7 +85,7 @@
                                         <!-- Product Info -->
                                         <td>
                                             <div class="d-flex align-items-center gap-3">
-                                                <img src="<?= upload_url($item['image']) ?>" alt="<?= e($item['name']) ?>" class="rounded-3 shadow-sm bg-dark" style="width: 64px; height: 64px; object-fit: cover;">
+                                                <img src="<?= upload_url($item['image']) ?>" alt="<?= e($item['name']) ?>" class="rounded-3 shadow-sm bg-light" style="width: 68px; height: 68px; object-fit: cover;">
                                                 <div>
                                                     <span class="badge bg-light text-muted small border mb-1"><?= e($item['category_name']) ?></span>
                                                     <h6 class="fw-bold mb-0">
@@ -74,7 +99,7 @@
                                         </td>
 
                                         <!-- Unit Price -->
-                                        <td class="text-center fw-semibold">
+                                        <td class="text-center fw-semibold text-dark">
                                             <?= format_price($item['price']) ?>
                                         </td>
 
@@ -93,7 +118,7 @@
                                         </td>
 
                                         <!-- Item Subtotal -->
-                                        <td class="text-end fw-bold text-primary fs-6">
+                                        <td class="text-end fw-bold text-dark fs-6">
                                             <?= format_price($itemSubtotal) ?>
                                         </td>
 
@@ -102,7 +127,7 @@
                                             <form action="/cart/remove" method="POST" class="m-0" onsubmit="return confirm('Remove this product from cart?');">
                                                 <?= csrf_field() ?>
                                                 <input type="hidden" name="product_id" value="<?= $item['product_id'] ?>">
-                                                <button type="submit" class="btn btn-link text-danger p-0" title="Remove item">
+                                                <button type="submit" class="btn btn-link text-danger p-0" title="Remove item" aria-label="Remove item">
                                                     <i class="bi bi-trash3 fs-5"></i>
                                                 </button>
                                             </form>
@@ -114,12 +139,12 @@
                     </div>
 
                     <div class="card-footer bg-white d-flex justify-content-between align-items-center p-3 border-top">
-                        <a href="/products" class="btn btn-outline-secondary btn-sm rounded-pill">
+                        <a href="/products" class="btn btn-outline-secondary btn-sm rounded-pill fw-semibold">
                             <i class="bi bi-arrow-left me-1"></i>Continue Shopping
                         </a>
                         <form action="/cart/clear" method="POST" class="m-0" onsubmit="return confirm('Clear entire shopping cart?');">
                             <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">
+                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill fw-semibold">
                                 <i class="bi bi-x-circle me-1"></i>Clear Cart
                             </button>
                         </form>
@@ -133,12 +158,12 @@
                     <h5 class="fw-bold mb-3">Order Summary</h5>
 
                     <div class="d-flex justify-content-between mb-2 small">
-                        <span class="text-muted">Subtotal (<?= $totals['total_quantity'] ?> items):</span>
-                        <span class="fw-semibold text-dark"><?= format_price($totals['subtotal']) ?></span>
+                        <span class="text-muted">Cart Subtotal (<?= $totals['total_quantity'] ?> items):</span>
+                        <span class="fw-bold text-dark"><?= format_price($totals['subtotal']) ?></span>
                     </div>
 
-                    <div class="d-flex justify-content-between mb-3 small">
-                        <span class="text-muted">Estimated Shipping:</span>
+                    <div class="d-flex justify-content-between mb-2 small">
+                        <span class="text-muted">Pan-India Express Delivery:</span>
                         <?php if ($totals['shipping'] == 0): ?>
                             <span class="fw-bold text-success">FREE</span>
                         <?php else: ?>
@@ -146,32 +171,34 @@
                         <?php endif; ?>
                     </div>
 
-                    <?php if ($totals['subtotal'] < 100): ?>
-                        <div class="alert alert-info py-2 small mb-3">
-                            <i class="bi bi-info-circle me-1"></i> Add <strong><?= format_price(100 - $totals['subtotal']) ?></strong> more for <strong>FREE Shipping!</strong>
-                        </div>
-                    <?php endif; ?>
+                    <!-- GST 18% Inclusive Note -->
+                    <?php 
+                    $gstAmount = round(($totals['subtotal'] * 18) / 118, 2);
+                    ?>
+                    <div class="d-flex justify-content-between mb-3 small">
+                        <span class="text-muted">GST Included (18%):</span>
+                        <span class="text-muted"><?= format_price($gstAmount) ?></span>
+                    </div>
 
                     <hr class="my-3">
 
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <span class="fs-5 fw-bold">Total:</span>
+                        <span class="fs-5 fw-bold text-dark">Grand Total:</span>
                         <span class="fs-4 fw-extrabold text-primary"><?= format_price($totals['total']) ?></span>
                     </div>
 
                     <div class="d-grid mb-3">
-                        <a href="/checkout" class="btn btn-primary btn-lg py-3 fw-bold rounded-3 shadow">
-                            <i class="bi bi-lock-fill me-2"></i>Proceed to Checkout
+                        <a href="/checkout" class="btn btn-primary btn-lg py-3 fw-bold rounded-3 shadow-md">
+                            <i class="bi bi-shield-lock-fill me-2"></i>Proceed to Checkout
                         </a>
                     </div>
 
                     <div class="text-center small text-muted">
                         <i class="bi bi-shield-check text-success me-1"></i>
-                        Encrypted Checkout & Stock Reservation
+                        Safe & Encrypted 256-Bit SSL Checkout
                     </div>
                 </div>
             </div>
         </div>
     <?php endif; ?>
 </div>
-

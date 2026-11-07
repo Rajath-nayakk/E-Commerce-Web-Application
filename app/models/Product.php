@@ -59,6 +59,27 @@ class Product extends Model
             $where[] = "p.stock > 0";
         }
 
+        // Price range filter
+        if (!empty($filters['min_price']) && is_numeric($filters['min_price'])) {
+            $where[] = "p.price >= :min_price";
+            $params['min_price'] = (float) $filters['min_price'];
+        }
+        if (!empty($filters['max_price']) && is_numeric($filters['max_price'])) {
+            $where[] = "p.price <= :max_price";
+            $params['max_price'] = (float) $filters['max_price'];
+        }
+
+        // Deal filter
+        if (!empty($filters['deal'])) {
+            $where[] = "p.is_deal = 1";
+        }
+
+        // Brand filter
+        if (!empty($filters['brand'])) {
+            $where[] = "p.brand = :brand";
+            $params['brand'] = $filters['brand'];
+        }
+
         // Sorting
         $sortOrder = match ($filters['sort'] ?? 'newest') {
             'price_asc'  => 'p.price ASC',
@@ -110,9 +131,37 @@ class Product extends Model
                 FROM products p
                 JOIN categories c ON p.category_id = c.id
                 WHERE p.is_active = 1
-                ORDER BY p.id DESC
+                ORDER BY p.is_featured DESC, p.id DESC
                 LIMIT {$limit}";
         return static::db()->fetchAll($sql);
+    }
+
+    /**
+     * Get top discounted deals of the day
+     */
+    public static function getDeals(int $limit = 6): array
+    {
+        $sql = "SELECT p.*, c.name as category_name, c.slug as category_slug
+                FROM products p
+                JOIN categories c ON p.category_id = c.id
+                WHERE p.is_active = 1 AND p.is_deal = 1
+                ORDER BY p.rating DESC, p.id DESC
+                LIMIT {$limit}";
+        return static::db()->fetchAll($sql);
+    }
+
+    /**
+     * Get related products within the same category
+     */
+    public static function getRelated(int $categoryId, int $excludeId, int $limit = 4): array
+    {
+        $sql = "SELECT p.*, c.name as category_name, c.slug as category_slug
+                FROM products p
+                JOIN categories c ON p.category_id = c.id
+                WHERE p.is_active = 1 AND p.category_id = :cat_id AND p.id != :exc_id
+                ORDER BY p.rating DESC, p.id DESC
+                LIMIT {$limit}";
+        return static::db()->fetchAll($sql, ['cat_id' => $categoryId, 'exc_id' => $excludeId]);
     }
 
     /**

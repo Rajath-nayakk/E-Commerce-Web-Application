@@ -19,11 +19,13 @@ class HomeController extends Controller
     {
         $categories = Category::allWithCount();
         $featuredProducts = Product::getFeatured(8);
+        $deals = Product::getDeals(4);
 
         $this->view('home/index', [
-            'title'            => 'NovaTech Gear - Official Hardware & Peripherals',
+            'title'            => 'NovaTech Gear | Premium Indian Electronics & Hardware Store',
             'categories'       => $categories,
-            'featuredProducts' => $featuredProducts
+            'featuredProducts' => $featuredProducts,
+            'deals'            => $deals
         ]);
     }
 }

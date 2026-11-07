@@ -33,10 +33,10 @@
 
                     <!-- Price -->
                     <div class="col-md-4">
-                        <label for="price" class="form-label small fw-semibold text-muted">Unit Price ($)</label>
+                        <label for="price" class="form-label small fw-semibold text-muted">Unit Price (₹)</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light">$</span>
-                            <input type="number" step="0.01" min="0.01" class="form-control" id="price" name="price" value="<?= e(old('price')) ?>" placeholder="299.99" required>
+                            <span class="input-group-text bg-light">₹</span>
+                            <input type="number" step="0.01" min="0.01" class="form-control" id="price" name="price" value="<?= e(old('price')) ?>" placeholder="4999.00" required>
                         </div>
                     </div>
 

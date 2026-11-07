@@ -58,9 +58,9 @@
                             <thead class="table-light small">
                                 <tr>
                                     <th>Item</th>
-                                    <th class="text-center" style="width: 100px;">Price</th>
+                                    <th class="text-center" style="width: 120px;">Price</th>
                                     <th class="text-center" style="width: 80px;">Qty</th>
-                                    <th class="text-end" style="width: 120px;">Total</th>
+                                    <th class="text-end" style="width: 140px;">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,7 +68,7 @@
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
-                                                <img src="<?= upload_url($item['product_image']) ?>" alt="" class="rounded bg-dark" style="width: 42px; height: 42px; object-fit: cover;">
+                                                <img src="<?= upload_url($item['product_image']) ?>" alt="" class="rounded bg-light" style="width: 48px; height: 48px; object-fit: cover;">
                                                 <div>
                                                     <a href="/products/<?= e($item['product_slug']) ?>" class="fw-semibold text-dark text-decoration-none">
                                                         <?= e($item['product_name']) ?>
@@ -77,16 +77,16 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="text-center"><?= format_price($item['price_at_purchase']) ?></td>
+                                        <td class="text-center fw-semibold"><?= format_price($item['price_at_purchase']) ?></td>
                                         <td class="text-center"><?= $item['quantity'] ?></td>
-                                        <td class="text-end fw-bold"><?= format_price(((float)$item['price_at_purchase']) * ((int)$item['quantity'])) ?></td>
+                                        <td class="text-end fw-bold text-dark"><?= format_price(((float)$item['price_at_purchase']) * ((int)$item['quantity'])) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
                             <tfoot class="table-light">
                                 <tr>
                                     <th colspan="3" class="text-end">Grand Total Paid:</th>
-                                    <th class="text-end fs-5 text-primary"><?= format_price($order['total']) ?></th>
+                                    <th class="text-end fs-5 text-primary fw-extrabold"><?= format_price($order['total']) ?></th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -94,11 +94,11 @@
 
                     <!-- Action CTAs -->
                     <div class="d-flex flex-column flex-sm-row justify-content-between gap-3">
-                        <a href="/orders/<?= $order['id'] ?>" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold">
+                        <a href="/orders/<?= $order['id'] ?>" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold shadow-sm">
                             <i class="bi bi-clock-history me-2"></i>Track Order Timeline
                         </a>
                         <a href="/products" class="btn btn-outline-secondary px-4 py-2 rounded-pill fw-semibold">
-                            <i class="bi bi-shop me-2"></i>Continue Shopping
+                            <i class="bi bi-arrow-left me-1"></i>Continue Shopping
                         </a>
                     </div>
                 </div>
@@ -106,4 +106,3 @@
         </div>
     </div>
 </div>
-
